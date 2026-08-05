@@ -14,10 +14,19 @@ import { Input } from "../components/base/input/input";
 export const Route = createFileRoute("/")({ component: App });
 
 const FEATURES = [
-  ["Type-Safe Routing", "Routes and links stay in sync across every page."],
-  ["Server Functions", "Call server code from your UI without creating API boilerplate."],
-  ["Streaming by Default", "Ship progressively rendered responses for faster experiences."],
-  ["Tailwind Native", "Design quickly with utility-first styling and reusable tokens."],
+  [
+    "App-Only Token",
+    "Client credentials grant against .default, so there is no consent screen and no refresh token.",
+  ],
+  ["No /me Endpoint", "Every call names a user explicitly: /users/{id} or the tenant directory."],
+  [
+    "Mail, Contacts, Calendar",
+    "Read any tenant user's messages, contacts, and events through server-side proxy routes.",
+  ],
+  [
+    "Credentials Stay Client-Side",
+    "Tenant id, client id, and secret live in this browser's IndexedDB and are posted to /api/auth.",
+  ],
 ];
 
 const CREDENTIAL_FIELDS = [
@@ -86,14 +95,15 @@ function App() {
     <main className="mx-auto w-full max-w-container px-4 pt-14 pb-8">
       <section className="animate-in rounded-2xl bg-primary px-6 py-10 shadow-xs ring-1 ring-secondary fade-in slide-in-from-bottom-3 sm:px-10 sm:py-14">
         <Badge color="brand" size="sm" className="mb-3">
-          TanStack Start Base Template
+          Internal Research Only
         </Badge>
         <h1 className="mb-5 max-w-3xl text-display-md font-semibold tracking-tight text-primary">
-          Start simple, ship quickly.
+          One tenant token. No user sign-in.
         </h1>
         <p className="mb-8 max-w-2xl text-md text-tertiary">
-          This base starter intentionally keeps things light: two routes, clean structure, and the
-          essentials you need to build from scratch.
+          A lab for a single question: can an organization-level access token (OAuth 2.0 client
+          credentials) stand in for per-user delegated sign-in when reading mail, contacts, and
+          calendars? Enter a tenant app registration to acquire one.
         </p>
 
         <form
@@ -126,14 +136,14 @@ function App() {
 
           <div className="flex flex-wrap items-center gap-3">
             <Button
-              href="https://tanstack.com/router"
+              href="https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow"
               target="_blank"
               rel="noopener noreferrer"
               color="secondary"
               size="md"
               iconTrailing={ArrowUpRight}
             >
-              Router Guide
+              Client Credentials Flow
             </Button>
             <form.Subscribe selector={(state) => state.canSubmit}>
               {(canSubmit) => (
@@ -145,7 +155,7 @@ function App() {
                   isLoading={authMutation.isPending}
                   isDisabled={!canSubmit}
                 >
-                  Submit Auth
+                  Acquire Token
                 </Button>
               )}
             </form.Subscribe>
@@ -184,19 +194,23 @@ function App() {
 
       <section className="mt-8 rounded-2xl bg-primary p-6 shadow-xs ring-1 ring-secondary">
         <Badge color="brand" size="sm" className="mb-2">
-          Quick Start
+          Before You Start
         </Badge>
         <ul className="m-0 list-disc space-y-2 pl-5 text-sm text-tertiary">
+          <li>An Entra app registration in the target tenant, with a client secret.</li>
           <li>
-            Edit <code>src/routes/index.tsx</code> to customize the home page.
+            <strong className="font-semibold text-secondary">Application</strong> permissions with
+            admin consent granted: <code>User.Read.All</code>, <code>Mail.Read</code>,{" "}
+            <code>Contacts.Read</code>, <code>Calendars.Read</code>. Delegated scopes will not work
+            here.
           </li>
           <li>
-            Update <code>src/components/Header.tsx</code> and <code>src/components/Footer.tsx</code>{" "}
-            for brand links.
+            The token is app-only and expires in about an hour. There is no refresh token, so submit
+            the form again to renew.
           </li>
           <li>
-            Add routes in <code>src/routes</code> and tweak visual tokens in{" "}
-            <code>src/styles/globals.css</code>.
+            The secret is stored in this browser, so use a throwaway registration and never
+            production credentials.
           </li>
         </ul>
       </section>

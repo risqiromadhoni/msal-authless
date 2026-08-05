@@ -1,34 +1,71 @@
-Welcome to your new TanStack Start app!
+# msal-authless
 
-# Getting Started
+Internal research lab for one question: instead of sending every user through an
+interactive OAuth sign-in, can a single organization-level access token (the OAuth 2.0
+client credentials grant against `https://graph.microsoft.com/.default`) read mail,
+contacts, and calendars for any user in a tenant?
 
-To run this application:
+> Research only. You paste a tenant id, client id, and client secret into the browser,
+> and the app keeps them in IndexedDB so a reload does not lose them. Use a throwaway
+> app registration. Never point this at production credentials.
+
+## How it works
+
+1. The home page (`src/routes/index.tsx`) collects the credential, validated by
+   `credentialSchema` in `src/schema.ts`.
+2. `POST /api/auth` (`src/routes/api/auth.ts`) hands it to `acquireToken`
+   (`src/lib/cca.server.ts`), which builds a fresh `ConfidentialClientApplication` per
+   call and returns the MSAL `AuthenticationResult`. Nothing is cached server-side, so
+   no tenant state leaks between requests.
+3. The result lives in `authStore` (`src/stores/auth.ts`), mirrored to IndexedDB. There
+   is no refresh token. `isTokenValid` checks `expiresOn`, and renewing means submitting
+   the form again. Signing out just drops the local token and credential.
+4. Dashboard pages send that token as `Authorization: Bearer …` to the proxy routes
+   under `src/routes/api/`, which share `graphResourceHandlers` in
+   `src/lib/graph-route.server.ts`.
+
+An app-only token has no signed-in user, so Graph `/me` does not exist here. Every path
+names a user: `/users`, `/users/{id|upn}`, `/users/{id}/messages`,
+`/users/{id}/contacts`, `/users/{id}/calendar/events`. The handlers escape every path
+segment with `encodeURIComponent`, because an unescaped `https://` in a segment would
+let `GraphRequest.parsePath` repoint the request at another host.
+
+| Route            | Graph resource     | Query params                         |
+| ---------------- | ------------------ | ------------------------------------ |
+| `/api/users`     | tenant directory   | optional `?id=` (object id or UPN)   |
+| `/api/mails`     | `/messages`        | `?userId=` required, optional `?id=` |
+| `/api/contacts`  | `/contacts`        | `?userId=` required, optional `?id=` |
+| `/api/calendars` | `/calendar/events` | `?userId=` required, optional `?id=` |
+
+The handlers expose GET/POST/DELETE; the UI currently only reads. Pages live under
+`src/routes/(dashboard)/`. `/profile` shows the acquired token's scopes and expiry,
+`/users` lists the directory, and `/users/$id` links through to that user's emails,
+contacts, and calendar.
+
+## Entra setup
+
+1. Register an application in the target tenant and add a client secret.
+2. Grant application permissions (not delegated) and click _Grant admin consent_:
+   `User.Read.All`, `Mail.Read`, `Contacts.Read`, `Calendars.Read`.
+3. Without consent, Graph answers `403 Insufficient privileges to complete the
+operation.`, and the proxy forwards that message verbatim.
+
+Exchange-backed paths (`/messages`, `/contacts`, `/calendar/events`) answer a bodyless
+`401` when the target user has no mailbox, so the proxy keeps the upstream status
+instead of collapsing it into a 502. If your tenant uses an [application access
+policy](https://learn.microsoft.com/en-us/graph/auth-limit-mailbox-access), the app can
+only reach the mailboxes that policy allows.
+
+## Getting started
 
 ```bash
 pnpm install
-pnpm dev
+pnpm dev        # http://localhost:3000
 ```
 
-# Building For Production
-
-To build this application for production:
-
-```bash
-pnpm build
-```
-
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles/globals.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
+Other scripts: `pnpm build`, `pnpm preview`, `pnpm deploy`, `pnpm generate-routes`
+(`tsr generate`). This project uses [Vite+](https://viteplus.dev/guide/), so `vp check`
+formats, lints, and typechecks, and `vp test` runs the test suite.
 
 ## Deploy to Cloudflare Workers
 
@@ -38,9 +75,10 @@ This project uses the Cloudflare Vite plugin (configured in `vite.config.ts`) an
 2. Authenticate: `wrangler login`
 3. Deploy: `npx wrangler deploy`
 
-For production env vars, run `wrangler secret put MY_VAR` for each secret listed in `.env.example`. Public (non-secret) vars go in `wrangler.jsonc` under `vars`.
+Public (non-secret) vars go in `wrangler.jsonc` under `vars`. Note that credentials are
+supplied at runtime through the form, not through environment variables.
 
-KV, D1, R2, and Durable Object bindings are configured in `wrangler.jsonc` — see https://developers.cloudflare.com/workers/wrangler/configuration/.
+KV, D1, R2, and Durable Object bindings are configured in `wrangler.jsonc`. See https://developers.cloudflare.com/workers/wrangler/configuration/.
 
 ## Untitled UI
 
@@ -55,171 +93,12 @@ shared helpers under `src/utils/`. Design tokens are in `src/styles/theme.css`, 
 Tailwind entry is `src/styles/globals.css`.
 
 Note that Untitled UI's token names invert shadcn's: `bg-primary` is the page surface and
-`text-primary` is the foreground ink — the brand ramp lives under `brand`
+`text-primary` is the foreground ink. The brand ramp lives under `brand`
 (`bg-brand-solid`, `text-brand-secondary`).
-
-## T3Env
-
-- You can use T3Env to add type safety to your environment variables.
-- Add Environment variables to the `src/env.mjs` file.
-- Use the environment variables in your code.
-
-### Usage
-
-```ts
-import { env } from "#/env";
-
-console.log(env.VITE_APP_TITLE);
-```
 
 ## Routing
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "My App" },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-});
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from "@tanstack/react-start";
-
-const getServerTime = createServerFn({
-  method: "GET",
-}).handler(async () => {
-  return new Date().toISOString();
-});
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    getServerTime().then(setTime);
-  }, []);
-
-  return <div>Server time: {time}</div>;
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from "@tanstack/react-router";
-import { json } from "@tanstack/react-start";
-
-export const Route = createFileRoute("/api/hello")({
-  server: {
-    handlers: {
-      GET: () => json({ message: "Hello, World!" }),
-    },
-  },
-});
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/people")({
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json();
-  },
-  component: PeopleComponent,
-});
-
-function PeopleComponent() {
-  const data = Route.useLoaderData();
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  );
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+File-based routing with [TanStack Router](https://tanstack.com/router); routes are files
+in `src/routes` and `src/routeTree.gen.ts` is generated. The root layout is
+`src/routes/__root.tsx`. API routes use the `server.handlers` property. See
+`src/routes/api/users.ts` for the smallest example.
