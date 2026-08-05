@@ -1,10 +1,15 @@
-# shadcn instructions
+# Untitled UI instructions
 
-Use the latest version of Shadcn to install new components, like this command to add a button component:
+Use the Untitled UI React CLI to install new components, like this command to add an input component:
 
 ```bash
-pnpm dlx shadcn@latest add button
+npx untitledui@latest add input
 ```
+
+Vendored components live under `src/components/base/` and `src/components/foundations/`,
+shared helpers under `src/utils/`. Design tokens are in `src/styles/theme.css`.
+`bg-primary` is the page surface, not the brand accent — the brand ramp is `brand`
+(`bg-brand-solid`, `text-brand-secondary`).
 
 <!-- code-review-graph MCP tools -->
 ## MCP Tools: code-review-graph

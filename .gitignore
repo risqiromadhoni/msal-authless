@@ -23,7 +23,9 @@ todos.json
 .tokensave/
 .cursor/
 .claude/
+.agents/
 
 CLAUDE.md
 AGENTS.md
 .mcp.json
+skills-lock.json

@@ -26,7 +26,7 @@ This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
 If you prefer not to use Tailwind CSS:
 
 1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
+2. Replace the Tailwind import in `src/styles/globals.css` with your own styles
 3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
 4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
 
@@ -42,13 +42,21 @@ For production env vars, run `wrangler secret put MY_VAR` for each secret listed
 
 KV, D1, R2, and Durable Object bindings are configured in `wrangler.jsonc` — see https://developers.cloudflare.com/workers/wrangler/configuration/.
 
-## Shadcn
+## Untitled UI
 
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
+Add components using the [Untitled UI React](https://www.untitledui.com/react) CLI.
 
 ```bash
-pnpm dlx shadcn@latest add button
+npx untitledui@latest add input
 ```
+
+Vendored components live under `src/components/base/` and `src/components/foundations/`;
+shared helpers under `src/utils/`. Design tokens are in `src/styles/theme.css`, and the
+Tailwind entry is `src/styles/globals.css`.
+
+Note that Untitled UI's token names invert shadcn's: `bg-primary` is the page surface and
+`text-primary` is the foreground ink — the brand ramp lives under `brand`
+(`bg-brand-solid`, `text-brand-secondary`).
 
 ## T3Env
 

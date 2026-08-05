@@ -10,7 +10,10 @@ const config = defineConfig({
   staged: {
     "*": "vp check --fix",
   },
-  fmt: {},
+  // tsr and oxfmt disagree on quote/wrap style; keep the generator's output.
+  fmt: {
+    ignorePatterns: ["**/routeTree.gen.ts"],
+  },
   lint: {
     jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
     rules: { "vite-plus/prefer-vite-plus-imports": "error" },
