@@ -8,97 +8,422 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as AboutRouteImport } from "./routes/about";
-import { Route as DemoTanstackQueryRouteImport } from "./routes/demo/tanstack-query";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as dashboardRouteRouteImport } from './routes/(dashboard)/route'
+import { Route as ApiAuthRouteImport } from './routes/api/auth'
+import { Route as ApiCalendarsRouteImport } from './routes/api/calendars'
+import { Route as ApiContactsRouteImport } from './routes/api/contacts'
+import { Route as ApiMailsRouteImport } from './routes/api/mails'
+import { Route as ApiUsersRouteImport } from './routes/api/users'
+import { Route as dashboardProfileIndexRouteImport } from './routes/(dashboard)/profile/index'
+import { Route as dashboardUsersIndexRouteImport } from './routes/(dashboard)/users/index'
+import { Route as dashboardUsersIdRouteRouteImport } from './routes/(dashboard)/users/$id/route'
+import { Route as dashboardUsersIdIndexRouteImport } from './routes/(dashboard)/users/$id/index'
+import { Route as dashboardUsersIdCalendarsIndexRouteImport } from './routes/(dashboard)/users/$id/calendars/index'
+import { Route as dashboardUsersIdCalendarsEventIdRouteImport } from './routes/(dashboard)/users/$id/calendars/$eventId'
+import { Route as dashboardUsersIdContactsIndexRouteImport } from './routes/(dashboard)/users/$id/contacts/index'
+import { Route as dashboardUsersIdContactsContactIdRouteImport } from './routes/(dashboard)/users/$id/contacts/$contactId'
+import { Route as dashboardUsersIdEmailsIndexRouteImport } from './routes/(dashboard)/users/$id/emails/index'
+import { Route as dashboardUsersIdEmailsMailIdRouteImport } from './routes/(dashboard)/users/$id/emails/$mailId'
 
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
-const AboutRoute = AboutRouteImport.update({
-  id: "/about",
-  path: "/about",
+} as any)
+const dashboardRouteRoute = dashboardRouteRouteImport.update({
+  id: '/(dashboard)',
   getParentRoute: () => rootRouteImport,
-} as any);
-const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
-  id: "/demo/tanstack-query",
-  path: "/demo/tanstack-query",
+} as any)
+const ApiAuthRoute = ApiAuthRouteImport.update({
+  id: '/api/auth',
+  path: '/api/auth',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
+const ApiCalendarsRoute = ApiCalendarsRouteImport.update({
+  id: '/api/calendars',
+  path: '/api/calendars',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiContactsRoute = ApiContactsRouteImport.update({
+  id: '/api/contacts',
+  path: '/api/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMailsRoute = ApiMailsRouteImport.update({
+  id: '/api/mails',
+  path: '/api/mails',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUsersRoute = ApiUsersRouteImport.update({
+  id: '/api/users',
+  path: '/api/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const dashboardProfileIndexRoute = dashboardProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+const dashboardUsersIndexRoute = dashboardUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+const dashboardUsersIdRouteRoute = dashboardUsersIdRouteRouteImport.update({
+  id: '/users/$id',
+  path: '/users/$id',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+const dashboardUsersIdIndexRoute = dashboardUsersIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => dashboardUsersIdRouteRoute,
+} as any)
+const dashboardUsersIdCalendarsIndexRoute =
+  dashboardUsersIdCalendarsIndexRouteImport.update({
+    id: '/calendars/',
+    path: '/calendars/',
+    getParentRoute: () => dashboardUsersIdRouteRoute,
+  } as any)
+const dashboardUsersIdCalendarsEventIdRoute =
+  dashboardUsersIdCalendarsEventIdRouteImport.update({
+    id: '/calendars/$eventId',
+    path: '/calendars/$eventId',
+    getParentRoute: () => dashboardUsersIdRouteRoute,
+  } as any)
+const dashboardUsersIdContactsIndexRoute =
+  dashboardUsersIdContactsIndexRouteImport.update({
+    id: '/contacts/',
+    path: '/contacts/',
+    getParentRoute: () => dashboardUsersIdRouteRoute,
+  } as any)
+const dashboardUsersIdContactsContactIdRoute =
+  dashboardUsersIdContactsContactIdRouteImport.update({
+    id: '/contacts/$contactId',
+    path: '/contacts/$contactId',
+    getParentRoute: () => dashboardUsersIdRouteRoute,
+  } as any)
+const dashboardUsersIdEmailsIndexRoute =
+  dashboardUsersIdEmailsIndexRouteImport.update({
+    id: '/emails/',
+    path: '/emails/',
+    getParentRoute: () => dashboardUsersIdRouteRoute,
+  } as any)
+const dashboardUsersIdEmailsMailIdRoute =
+  dashboardUsersIdEmailsMailIdRouteImport.update({
+    id: '/emails/$mailId',
+    path: '/emails/$mailId',
+    getParentRoute: () => dashboardUsersIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/about": typeof AboutRoute;
-  "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
+  '/': typeof IndexRoute
+  '/api/auth': typeof ApiAuthRoute
+  '/api/calendars': typeof ApiCalendarsRoute
+  '/api/contacts': typeof ApiContactsRoute
+  '/api/mails': typeof ApiMailsRoute
+  '/api/users': typeof ApiUsersRoute
+  '/users/$id': typeof dashboardUsersIdRouteRouteWithChildren
+  '/profile/': typeof dashboardProfileIndexRoute
+  '/users/': typeof dashboardUsersIndexRoute
+  '/users/$id/': typeof dashboardUsersIdIndexRoute
+  '/users/$id/calendars/$eventId': typeof dashboardUsersIdCalendarsEventIdRoute
+  '/users/$id/contacts/$contactId': typeof dashboardUsersIdContactsContactIdRoute
+  '/users/$id/emails/$mailId': typeof dashboardUsersIdEmailsMailIdRoute
+  '/users/$id/calendars/': typeof dashboardUsersIdCalendarsIndexRoute
+  '/users/$id/contacts/': typeof dashboardUsersIdContactsIndexRoute
+  '/users/$id/emails/': typeof dashboardUsersIdEmailsIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/about": typeof AboutRoute;
-  "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
+  '/': typeof IndexRoute
+  '/api/auth': typeof ApiAuthRoute
+  '/api/calendars': typeof ApiCalendarsRoute
+  '/api/contacts': typeof ApiContactsRoute
+  '/api/mails': typeof ApiMailsRoute
+  '/api/users': typeof ApiUsersRoute
+  '/profile': typeof dashboardProfileIndexRoute
+  '/users': typeof dashboardUsersIndexRoute
+  '/users/$id': typeof dashboardUsersIdIndexRoute
+  '/users/$id/calendars/$eventId': typeof dashboardUsersIdCalendarsEventIdRoute
+  '/users/$id/contacts/$contactId': typeof dashboardUsersIdContactsContactIdRoute
+  '/users/$id/emails/$mailId': typeof dashboardUsersIdEmailsMailIdRoute
+  '/users/$id/calendars': typeof dashboardUsersIdCalendarsIndexRoute
+  '/users/$id/contacts': typeof dashboardUsersIdContactsIndexRoute
+  '/users/$id/emails': typeof dashboardUsersIdEmailsIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/about": typeof AboutRoute;
-  "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/(dashboard)': typeof dashboardRouteRouteWithChildren
+  '/api/auth': typeof ApiAuthRoute
+  '/api/calendars': typeof ApiCalendarsRoute
+  '/api/contacts': typeof ApiContactsRoute
+  '/api/mails': typeof ApiMailsRoute
+  '/api/users': typeof ApiUsersRoute
+  '/(dashboard)/users/$id': typeof dashboardUsersIdRouteRouteWithChildren
+  '/(dashboard)/profile/': typeof dashboardProfileIndexRoute
+  '/(dashboard)/users/': typeof dashboardUsersIndexRoute
+  '/(dashboard)/users/$id/': typeof dashboardUsersIdIndexRoute
+  '/(dashboard)/users/$id/calendars/$eventId': typeof dashboardUsersIdCalendarsEventIdRoute
+  '/(dashboard)/users/$id/contacts/$contactId': typeof dashboardUsersIdContactsContactIdRoute
+  '/(dashboard)/users/$id/emails/$mailId': typeof dashboardUsersIdEmailsMailIdRoute
+  '/(dashboard)/users/$id/calendars/': typeof dashboardUsersIdCalendarsIndexRoute
+  '/(dashboard)/users/$id/contacts/': typeof dashboardUsersIdContactsIndexRoute
+  '/(dashboard)/users/$id/emails/': typeof dashboardUsersIdEmailsIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/about" | "/demo/tanstack-query";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/about" | "/demo/tanstack-query";
-  id: "__root__" | "/" | "/about" | "/demo/tanstack-query";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/api/auth'
+    | '/api/calendars'
+    | '/api/contacts'
+    | '/api/mails'
+    | '/api/users'
+    | '/users/$id'
+    | '/profile/'
+    | '/users/'
+    | '/users/$id/'
+    | '/users/$id/calendars/$eventId'
+    | '/users/$id/contacts/$contactId'
+    | '/users/$id/emails/$mailId'
+    | '/users/$id/calendars/'
+    | '/users/$id/contacts/'
+    | '/users/$id/emails/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/api/auth'
+    | '/api/calendars'
+    | '/api/contacts'
+    | '/api/mails'
+    | '/api/users'
+    | '/profile'
+    | '/users'
+    | '/users/$id'
+    | '/users/$id/calendars/$eventId'
+    | '/users/$id/contacts/$contactId'
+    | '/users/$id/emails/$mailId'
+    | '/users/$id/calendars'
+    | '/users/$id/contacts'
+    | '/users/$id/emails'
+  id:
+    | '__root__'
+    | '/'
+    | '/(dashboard)'
+    | '/api/auth'
+    | '/api/calendars'
+    | '/api/contacts'
+    | '/api/mails'
+    | '/api/users'
+    | '/(dashboard)/users/$id'
+    | '/(dashboard)/profile/'
+    | '/(dashboard)/users/'
+    | '/(dashboard)/users/$id/'
+    | '/(dashboard)/users/$id/calendars/$eventId'
+    | '/(dashboard)/users/$id/contacts/$contactId'
+    | '/(dashboard)/users/$id/emails/$mailId'
+    | '/(dashboard)/users/$id/calendars/'
+    | '/(dashboard)/users/$id/contacts/'
+    | '/(dashboard)/users/$id/emails/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  AboutRoute: typeof AboutRoute;
-  DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute;
+  IndexRoute: typeof IndexRoute
+  dashboardRouteRoute: typeof dashboardRouteRouteWithChildren
+  ApiAuthRoute: typeof ApiAuthRoute
+  ApiCalendarsRoute: typeof ApiCalendarsRoute
+  ApiContactsRoute: typeof ApiContactsRoute
+  ApiMailsRoute: typeof ApiMailsRoute
+  ApiUsersRoute: typeof ApiUsersRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/about": {
-      id: "/about";
-      path: "/about";
-      fullPath: "/about";
-      preLoaderRoute: typeof AboutRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/demo/tanstack-query": {
-      id: "/demo/tanstack-query";
-      path: "/demo/tanstack-query";
-      fullPath: "/demo/tanstack-query";
-      preLoaderRoute: typeof DemoTanstackQueryRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(dashboard)': {
+      id: '/(dashboard)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof dashboardRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth': {
+      id: '/api/auth'
+      path: '/api/auth'
+      fullPath: '/api/auth'
+      preLoaderRoute: typeof ApiAuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/calendars': {
+      id: '/api/calendars'
+      path: '/api/calendars'
+      fullPath: '/api/calendars'
+      preLoaderRoute: typeof ApiCalendarsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/contacts': {
+      id: '/api/contacts'
+      path: '/api/contacts'
+      fullPath: '/api/contacts'
+      preLoaderRoute: typeof ApiContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mails': {
+      id: '/api/mails'
+      path: '/api/mails'
+      fullPath: '/api/mails'
+      preLoaderRoute: typeof ApiMailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/users': {
+      id: '/api/users'
+      path: '/api/users'
+      fullPath: '/api/users'
+      preLoaderRoute: typeof ApiUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(dashboard)/profile/': {
+      id: '/(dashboard)/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof dashboardProfileIndexRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/users/': {
+      id: '/(dashboard)/users/'
+      path: '/users'
+      fullPath: '/users/'
+      preLoaderRoute: typeof dashboardUsersIndexRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/users/$id': {
+      id: '/(dashboard)/users/$id'
+      path: '/users/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof dashboardUsersIdRouteRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/users/$id/': {
+      id: '/(dashboard)/users/$id/'
+      path: '/'
+      fullPath: '/users/$id/'
+      preLoaderRoute: typeof dashboardUsersIdIndexRouteImport
+      parentRoute: typeof dashboardUsersIdRouteRoute
+    }
+    '/(dashboard)/users/$id/calendars/': {
+      id: '/(dashboard)/users/$id/calendars/'
+      path: '/calendars'
+      fullPath: '/users/$id/calendars/'
+      preLoaderRoute: typeof dashboardUsersIdCalendarsIndexRouteImport
+      parentRoute: typeof dashboardUsersIdRouteRoute
+    }
+    '/(dashboard)/users/$id/calendars/$eventId': {
+      id: '/(dashboard)/users/$id/calendars/$eventId'
+      path: '/calendars/$eventId'
+      fullPath: '/users/$id/calendars/$eventId'
+      preLoaderRoute: typeof dashboardUsersIdCalendarsEventIdRouteImport
+      parentRoute: typeof dashboardUsersIdRouteRoute
+    }
+    '/(dashboard)/users/$id/contacts/': {
+      id: '/(dashboard)/users/$id/contacts/'
+      path: '/contacts'
+      fullPath: '/users/$id/contacts/'
+      preLoaderRoute: typeof dashboardUsersIdContactsIndexRouteImport
+      parentRoute: typeof dashboardUsersIdRouteRoute
+    }
+    '/(dashboard)/users/$id/contacts/$contactId': {
+      id: '/(dashboard)/users/$id/contacts/$contactId'
+      path: '/contacts/$contactId'
+      fullPath: '/users/$id/contacts/$contactId'
+      preLoaderRoute: typeof dashboardUsersIdContactsContactIdRouteImport
+      parentRoute: typeof dashboardUsersIdRouteRoute
+    }
+    '/(dashboard)/users/$id/emails/': {
+      id: '/(dashboard)/users/$id/emails/'
+      path: '/emails'
+      fullPath: '/users/$id/emails/'
+      preLoaderRoute: typeof dashboardUsersIdEmailsIndexRouteImport
+      parentRoute: typeof dashboardUsersIdRouteRoute
+    }
+    '/(dashboard)/users/$id/emails/$mailId': {
+      id: '/(dashboard)/users/$id/emails/$mailId'
+      path: '/emails/$mailId'
+      fullPath: '/users/$id/emails/$mailId'
+      preLoaderRoute: typeof dashboardUsersIdEmailsMailIdRouteImport
+      parentRoute: typeof dashboardUsersIdRouteRoute
+    }
   }
 }
 
+interface dashboardUsersIdRouteRouteChildren {
+  dashboardUsersIdIndexRoute: typeof dashboardUsersIdIndexRoute
+  dashboardUsersIdCalendarsEventIdRoute: typeof dashboardUsersIdCalendarsEventIdRoute
+  dashboardUsersIdContactsContactIdRoute: typeof dashboardUsersIdContactsContactIdRoute
+  dashboardUsersIdEmailsMailIdRoute: typeof dashboardUsersIdEmailsMailIdRoute
+  dashboardUsersIdCalendarsIndexRoute: typeof dashboardUsersIdCalendarsIndexRoute
+  dashboardUsersIdContactsIndexRoute: typeof dashboardUsersIdContactsIndexRoute
+  dashboardUsersIdEmailsIndexRoute: typeof dashboardUsersIdEmailsIndexRoute
+}
+
+const dashboardUsersIdRouteRouteChildren: dashboardUsersIdRouteRouteChildren = {
+  dashboardUsersIdIndexRoute: dashboardUsersIdIndexRoute,
+  dashboardUsersIdCalendarsEventIdRoute: dashboardUsersIdCalendarsEventIdRoute,
+  dashboardUsersIdContactsContactIdRoute:
+    dashboardUsersIdContactsContactIdRoute,
+  dashboardUsersIdEmailsMailIdRoute: dashboardUsersIdEmailsMailIdRoute,
+  dashboardUsersIdCalendarsIndexRoute: dashboardUsersIdCalendarsIndexRoute,
+  dashboardUsersIdContactsIndexRoute: dashboardUsersIdContactsIndexRoute,
+  dashboardUsersIdEmailsIndexRoute: dashboardUsersIdEmailsIndexRoute,
+}
+
+const dashboardUsersIdRouteRouteWithChildren =
+  dashboardUsersIdRouteRoute._addFileChildren(
+    dashboardUsersIdRouteRouteChildren,
+  )
+
+interface dashboardRouteRouteChildren {
+  dashboardUsersIdRouteRoute: typeof dashboardUsersIdRouteRouteWithChildren
+  dashboardProfileIndexRoute: typeof dashboardProfileIndexRoute
+  dashboardUsersIndexRoute: typeof dashboardUsersIndexRoute
+}
+
+const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
+  dashboardUsersIdRouteRoute: dashboardUsersIdRouteRouteWithChildren,
+  dashboardProfileIndexRoute: dashboardProfileIndexRoute,
+  dashboardUsersIndexRoute: dashboardUsersIndexRoute,
+}
+
+const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(
+  dashboardRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
-};
+  dashboardRouteRoute: dashboardRouteRouteWithChildren,
+  ApiAuthRoute: ApiAuthRoute,
+  ApiCalendarsRoute: ApiCalendarsRoute,
+  ApiContactsRoute: ApiContactsRoute,
+  ApiMailsRoute: ApiMailsRoute,
+  ApiUsersRoute: ApiUsersRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx";
-import type { createStart } from "@tanstack/react-start";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }
